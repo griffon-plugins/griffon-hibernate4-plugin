@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.plugins.hibernate4.internal;
+package org.codehaus.griffon.runtime.hibernate4.internal;
 
 import griffon.core.GriffonApplication;
 import griffon.plugins.hibernate4.Hibernate4Mapping;

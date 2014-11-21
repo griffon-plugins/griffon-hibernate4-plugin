@@ -13,31 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.plugins.hibernate4.internal.exceptions;
+package org.codehaus.griffon.runtime.hibernate4.internal.exceptions;
+
+import griffon.exceptions.GriffonException;
 
 /**
- * Exception indicating that something went wrong during JDBC metadata lookup.
- * <p/>
- * <p>This is a checked exception since we want it to be caught, logged and
- * handled rather than cause the application to fail. Failure to read JDBC
- * metadata is usually not a fatal problem.
- *
- * @author Thomas Risberg
- * @since 1.0.1
+ * @author Andres Almiray
  */
-public class MetaDataAccessException extends DatabaseException {
-    public MetaDataAccessException() {
+public class DatabaseException extends GriffonException {
+    public DatabaseException() {
     }
 
-    public MetaDataAccessException(String arg0) {
+    public DatabaseException(String arg0) {
         super(arg0);
     }
 
-    public MetaDataAccessException(String arg0, Throwable arg1) {
+    public DatabaseException(String arg0, Throwable arg1) {
         super(arg0, arg1);
     }
 
-    public MetaDataAccessException(Throwable arg0) {
+    public DatabaseException(Throwable arg0) {
         super(arg0);
     }
 }

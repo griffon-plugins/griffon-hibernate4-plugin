@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.plugins.hibernate4.internal;
+package org.codehaus.griffon.runtime.hibernate4.internal;
 
-import griffon.plugins.hibernate4.internal.exceptions.DatabaseException;
+import org.codehaus.griffon.runtime.hibernate4.internal.exceptions.DatabaseException;
 import griffon.util.GriffonNameUtils;
 import org.hibernate.dialect.Dialect;
 import org.hibernate.engine.jdbc.dialect.internal.StandardDialectResolver;

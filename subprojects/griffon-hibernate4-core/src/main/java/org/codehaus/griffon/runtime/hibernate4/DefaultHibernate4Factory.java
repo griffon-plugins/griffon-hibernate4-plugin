@@ -21,7 +21,7 @@ import griffon.plugins.datasource.DataSourceFactory;
 import griffon.plugins.datasource.DataSourceStorage;
 import griffon.plugins.hibernate4.Hibernate4Bootstrap;
 import griffon.plugins.hibernate4.Hibernate4Factory;
-import griffon.plugins.hibernate4.internal.HibernateConfigurationHelper;
+import org.codehaus.griffon.runtime.hibernate4.internal.HibernateConfigurationHelper;
 import griffon.util.CollectionUtils;
 import org.codehaus.griffon.runtime.core.storage.AbstractObjectFactory;
 import org.hibernate.Session;
