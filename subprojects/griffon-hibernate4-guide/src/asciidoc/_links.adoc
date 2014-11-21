@@ -1,0 +1,13 @@
+
+:link_griffon_datasource_plugin: link:http://griffon-plugins.github.io/griffon-datasource-plugin[griffon-datasource-plugin, window="_blank"]
+:link_hibernate4: link:http://hibernate.org/orm/[Hibernate, window="_blank"]
+:link_session_factory: link:http://docs.jboss.org/hibernate/orm/4.3/javadocs/org/hibernate/SessionFactory.html[SessionFactory, window="_blank"]
+
+:api_hibernate4_handler: link:api/griffon/plugins/hibernate4/Hibernate4Handler.html[Hibernate4Handler, window="_blank"]
+:api_hibernate4_callback: link:api/griffon/plugins/hibernate4/Hibernate4Callback.html[Hibernate4Callback, window="_blank"]
+:api_hibernate4_aware: link:api/griffon/transform/Hibernate4Aware.html[@Hibernate4Aware, window="_blank"]
+:api_hibernate4_bootstrap: link:api/griffon/plugins/hibernate4/Hibernate4Bootstrap.html[Hibernate4Bootstrap, window="_blank"]
+
+:path_griffon_hibernate4_core: {rootdir}/subprojects/griffon-hibernate4-core
+:path_griffon_hibernate4_groovy_compile: {rootdir}/subprojects/griffon-hibernate4-groovy-compile
+
