@@ -1,0 +1,6 @@
+griffon.plugins.hibernate4
+griffon.plugins.hibernate4.exceptions
+griffon.plugins.hibernate4.internal
+griffon.plugins.hibernate4.internal.exceptions
+griffon.transform
+org.codehaus.griffon.runtime.hibernate4
