@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 1.5.0">
+<meta name="generator" content="Asciidoctor 1.5.2">
 <meta name="author" content="Andres Almiray">
 <title>Griffon Hibernate4 Plugin</title>
 <link rel="stylesheet" href="./css/style.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="./coderay-asciidoctor.css">
 </head>
 <body class="book toc2 toc-left">
@@ -16,7 +16,7 @@
 <h1>Griffon Hibernate4 Plugin</h1>
 <div class="details">
 <span id="author" class="author">Andres Almiray</span><br>
-<span id="revnumber">version 1.0.0-SNAPSHOT</span>
+<span id="revnumber">version 1.0.0</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -464,7 +464,7 @@ into said class.</p>
 <h3 id="_dsl_descriptors"><a class="anchor" href="#_dsl_descriptors"></a>2.5. DSL Descriptors</h3>
 <div class="paragraph">
 <p>This plugin provides DSL descriptors for Intellij IDEA and Eclipse (provided you have the Groovy Eclipse plugin installed).
-These descriptors are found inside the <code>griffon-hibernate4-groovy-compile-1.0.0-SNAPSHOT.jar</code>, with locations</p>
+These descriptors are found inside the <code>griffon-hibernate4-groovy-compile-1.0.0.jar</code>, with locations</p>
 </div>
 <div class="ulist">
 <ul>
@@ -496,7 +496,7 @@ may include the following snippet in <code>build.gradle</code></p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight nowrap"><code data-lang="groovy">dependencies {
-    griffon 'org.codehaus.griffon.plugins:griffon-hibernate4-plugin:1.0.0-SNAPSHOT'
+    griffon 'org.codehaus.griffon.plugins:griffon-hibernate4-plugin:1.0.0'
 }</code></pre>
 </div>
 </div>
@@ -512,7 +512,7 @@ may include the following snippet in <code>build.gradle</code></p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight nowrap"><code data-lang="groovy">dependencies {
-    compile 'org.codehaus.griffon.plugins:griffon-hibernate4-core:1.0.0-SNAPSHOT'
+    compile 'org.codehaus.griffon.plugins:griffon-hibernate4-core:1.0.0'
 }</code></pre>
 </div>
 </div>
@@ -520,7 +520,7 @@ may include the following snippet in <code>build.gradle</code></p>
 <div class="title">Compile Only</div>
 <div class="content">
 <pre class="CodeRay highlight nowrap"><code data-lang="groovy">dependencies {
-    compileOnly 'org.codehaus.griffon.plugins:griffon-hibernate4-groovy-compile:1.0.0-SNAPSHOT'
+    compileOnly 'org.codehaus.griffon.plugins:griffon-hibernate4-groovy-compile:1.0.0'
 }</code></pre>
 </div>
 </div>
@@ -539,7 +539,7 @@ snippet before the <code>&lt;build&gt;</code> element</p>
         <span class="tag">&lt;dependency&gt;</span>
             <span class="tag">&lt;groupId&gt;</span>org.codehaus.griffon.plugins<span class="tag">&lt;/groupId&gt;</span>
             <span class="tag">&lt;artifactId&gt;</span>griffon-hibernate4-plugin<span class="tag">&lt;/artifactId&gt;</span>
-            <span class="tag">&lt;version&gt;</span>1.0.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+            <span class="tag">&lt;version&gt;</span>1.0.0<span class="tag">&lt;/version&gt;</span>
             <span class="tag">&lt;type&gt;</span>pom<span class="tag">&lt;/type&gt;</span>
             <span class="tag">&lt;scope&gt;</span>import<span class="tag">&lt;/scope&gt;</span>
         <span class="tag">&lt;/dependency&gt;</span>
@@ -643,8 +643,8 @@ bind(Hibernate4Handler.class)
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.0.0-SNAPSHOT<br>
-Last updated 2014-11-20 22:10:18 CET
+Version 1.0.0<br>
+Last updated 2014-11-21 09:58:54 CET
 </div>
 </div>
 </body>
