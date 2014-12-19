@@ -83,6 +83,11 @@ The following table summarizes the properties that can be specified inside a `se
 |
 | Additional resource mappings
 
+| connect_on_startup
+| boolean
+| false
+| Establishes a connection to the datasource at the end of the `Bootstrap` phase.
+
 |====
 
 === Accessing the Datasource

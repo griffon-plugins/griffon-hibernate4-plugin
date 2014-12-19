@@ -21,9 +21,9 @@ import griffon.plugins.datasource.DataSourceFactory;
 import griffon.plugins.datasource.DataSourceStorage;
 import griffon.plugins.hibernate4.Hibernate4Bootstrap;
 import griffon.plugins.hibernate4.Hibernate4Factory;
-import org.codehaus.griffon.runtime.hibernate4.internal.HibernateConfigurationHelper;
 import griffon.util.CollectionUtils;
 import org.codehaus.griffon.runtime.core.storage.AbstractObjectFactory;
+import org.codehaus.griffon.runtime.hibernate4.internal.HibernateConfigurationHelper;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -32,9 +32,12 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.sql.DataSource;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import static griffon.util.ConfigUtils.getConfigValue;
+import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
 
@@ -42,6 +45,9 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  */
 public class DefaultHibernate4Factory extends AbstractObjectFactory<SessionFactory> implements Hibernate4Factory {
+    private static final String ERROR_SESSION_FACTORY_NAME_BLANK = "Argument 'sessionFactoryName' must not be blank";
+    private final Set<String> sessionFactoryNames = new LinkedHashSet<>();
+
     @Inject
     private DataSourceFactory dataSourceFactory;
 
@@ -54,6 +60,25 @@ public class DefaultHibernate4Factory extends AbstractObjectFactory<SessionFacto
     @Inject
     public DefaultHibernate4Factory(@Nonnull @Named("hibernate4") griffon.core.Configuration configuration, @Nonnull GriffonApplication application) {
         super(configuration, application);
+        sessionFactoryNames.add(KEY_DEFAULT);
+
+        if (configuration.containsKey(getPluralKey())) {
+            Map<String, Object> sessionFactories = (Map<String, Object>) configuration.get(getPluralKey());
+            sessionFactoryNames.addAll(sessionFactories.keySet());
+        }
+    }
+
+    @Nonnull
+    @Override
+    public Set<String> getSessionFactoryNames() {
+        return sessionFactoryNames;
+    }
+
+    @Nonnull
+    @Override
+    public Map<String, Object> getConfigurationFor(@Nonnull String sessionFactoryName) {
+        requireNonBlank(sessionFactoryName, ERROR_SESSION_FACTORY_NAME_BLANK);
+        return narrowConfig(sessionFactoryName);
     }
 
     @Nonnull

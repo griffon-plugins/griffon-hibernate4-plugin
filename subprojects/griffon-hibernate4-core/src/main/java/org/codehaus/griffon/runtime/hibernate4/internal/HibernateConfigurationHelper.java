@@ -137,7 +137,7 @@ public class HibernateConfigurationHelper {
                 line = line.trim();
                 if (isBlank(line)) return;
                 line = line.replace('.','/');
-                LOG.debug("Registering {} as hibernate resource", line + HBM_XML_SUFFIX);
+                LOG.debug("Registering {} as hibernate resource", line + HBM_XML_SUFFIX);
                 config.addResource(line + HBM_XML_SUFFIX);
             }
         });
@@ -147,7 +147,7 @@ public class HibernateConfigurationHelper {
             if (!mapping.endsWith(HBM_XML_SUFFIX)) {
                 mapping = mapping + HBM_XML_SUFFIX;
             }
-            LOG.debug("Registering {} as hibernate resource", mapping);
+            LOG.debug("Registering {} as hibernate resource", mapping);
             config.addResource(mapping);
         }
     }

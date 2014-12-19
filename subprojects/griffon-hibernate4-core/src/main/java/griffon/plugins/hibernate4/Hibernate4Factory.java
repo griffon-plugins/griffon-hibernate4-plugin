@@ -18,8 +18,17 @@ package griffon.plugins.hibernate4;
 import griffon.core.storage.ObjectFactory;
 import org.hibernate.SessionFactory;
 
+import javax.annotation.Nonnull;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * @author Andres Almiray
  */
 public interface Hibernate4Factory extends ObjectFactory<SessionFactory> {
+    @Nonnull
+    Set<String> getSessionFactoryNames();
+
+    @Nonnull
+    Map<String, Object> getConfigurationFor(@Nonnull String sessionFactoryName);
 }

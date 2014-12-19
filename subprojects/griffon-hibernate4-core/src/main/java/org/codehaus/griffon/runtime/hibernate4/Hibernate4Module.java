@@ -16,7 +16,9 @@
 package org.codehaus.griffon.runtime.hibernate4;
 
 import griffon.core.Configuration;
+import griffon.core.addon.GriffonAddon;
 import griffon.core.injection.Module;
+import griffon.inject.DependsOn;
 import griffon.plugins.hibernate4.Hibernate4Factory;
 import griffon.plugins.hibernate4.Hibernate4Handler;
 import griffon.plugins.hibernate4.Hibernate4Storage;
@@ -32,6 +34,7 @@ import static griffon.util.AnnotationUtils.named;
 /**
  * @author Andres Almiray
  */
+@DependsOn("datasource")
 @Named("hibernate4")
 @ServiceProviderFor(Module.class)
 public class Hibernate4Module extends AbstractModule {
@@ -58,6 +61,10 @@ public class Hibernate4Module extends AbstractModule {
 
         bind(Hibernate4Handler.class)
             .to(DefaultHibernate4Handler.class)
+            .asSingleton();
+
+        bind(GriffonAddon.class)
+            .to(Hibernate4Addon.class)
             .asSingleton();
         // end::bindings[]
     }
