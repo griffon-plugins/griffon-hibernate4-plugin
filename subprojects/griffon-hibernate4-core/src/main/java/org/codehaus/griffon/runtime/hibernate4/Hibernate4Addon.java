@@ -16,11 +16,15 @@
 package org.codehaus.griffon.runtime.hibernate4;
 
 import griffon.core.GriffonApplication;
+import griffon.core.env.Metadata;
 import griffon.inject.DependsOn;
 import griffon.plugins.hibernate4.Hibernate4Callback;
 import griffon.plugins.hibernate4.Hibernate4Factory;
 import griffon.plugins.hibernate4.Hibernate4Handler;
+import griffon.plugins.hibernate4.Hibernate4Storage;
+import griffon.plugins.monitor.MBeanManager;
 import org.codehaus.griffon.runtime.core.addon.AbstractGriffonAddon;
+import org.codehaus.griffon.runtime.jmx.Hibernate4StorageMonitor;
 import org.hibernate.Session;
 
 import javax.annotation.Nonnull;
@@ -42,6 +46,20 @@ public class Hibernate4Addon extends AbstractGriffonAddon {
 
     @Inject
     private Hibernate4Factory hibernate4Factory;
+
+    @Inject
+    private Hibernate4Storage hibernate4Storage;
+
+    @Inject
+    private MBeanManager mbeanManager;
+
+    @Inject
+    private Metadata metadata;
+
+    @Override
+    public void init(@Nonnull GriffonApplication application) {
+        mbeanManager.registerMBean(new Hibernate4StorageMonitor(metadata, hibernate4Storage));
+    }
 
     public void onStartupStart(@Nonnull GriffonApplication application) {
         for (String sessionFactoryName : hibernate4Factory.getSessionFactoryNames()) {

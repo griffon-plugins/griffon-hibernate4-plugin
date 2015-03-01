@@ -86,7 +86,12 @@ The following table summarizes the properties that can be specified inside a `se
 | connect_on_startup
 | boolean
 | false
-| Establishes a connection to the datasource at the end of the `Bootstrap` phase.
+| Establishes a connection to the datasource at the beginning of the `Startup` phase.
+
+| jmx
+| boolean
+| true
+| Expose the connection pool using JMX.
 
 |====
 
@@ -187,7 +192,7 @@ public class ApplicationModule extends AbstractModule {
 
 == Example
 
-The following is a trivial usage of the `{api_hibernate4_handler}` inside a service
+The following is a trivial usage of the `{api_hibernate4_handler}` inside a Java service
 
 [source,java,options="nowrap"]
 .com.acme.SampleService.java
@@ -220,6 +225,34 @@ public class SampleService extends AbstractGriffonService {
 }
 ----
 
+Here's the Groovy version of it
+
+[source,groovy,options="nowrap"]
+.com.acme.SampleService.groovy
+----
+package com.acme
+
+import griffon.core.artifact.GriffonService
+import griffon.metadata.ArtifactProviderFor
+
+import griffon.plugins.hibernate4.Hibernate4Handler
+import org.hibernate.Session
+
+import javax.inject.Inject
+
+@ArtifactProviderFor(GriffonService)
+class SampleService {
+    @Inject
+    private Hibernate4Handler hibernate4Handler
+
+    String getPersonName(int id) {
+         hibernate4Handler.withHbm4Session { String sessionFactoryName, Session session ->
+             session.createQuery('from Person where id = ' + id).uniqueResult()?.name
+         }
+    }
+}
+----
+
 == Events
 
 The following events will be triggered by `{api_hibernate4_handler}`
@@ -239,7 +272,29 @@ NOTE: DataSource events may be triggered during connection and disconnection fro
 == AST Transformation
 
 You can apply the `{api_hibernate4_aware}` AST transformation on any class. This injects the behavior of `{api_hibernate4_handler}`
-into said class.
+into said class. The previous Groovy service example can be rewritten as follows
+
+[source,groovy,options="nowrap"]
+.com.acme.SampleService.groovy
+----
+package com.acme
+
+import griffon.core.artifact.GriffonService
+import griffon.metadata.ArtifactProviderFor
+import griffon.transform.Hibernate4Aware
+
+import org.hibernate.Session
+
+@Hibernate4Aware
+@ArtifactProviderFor(GriffonService)
+class SampleService {
+    String getPersonName(int id) {
+         withHbm4Session { String sessionFactoryName, Session session ->
+             session.createQuery('from Person where id = ' + id).uniqueResult()?.name
+         }
+    }
+}
+----
 
 == DSL Descriptors
 
