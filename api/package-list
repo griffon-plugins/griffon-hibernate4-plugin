@@ -4,3 +4,4 @@ griffon.transform
 org.codehaus.griffon.runtime.hibernate4
 org.codehaus.griffon.runtime.hibernate4.internal
 org.codehaus.griffon.runtime.hibernate4.internal.exceptions
+org.codehaus.griffon.runtime.jmx

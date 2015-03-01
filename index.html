@@ -16,7 +16,7 @@
 <h1>Griffon Hibernate4 Plugin</h1>
 <div class="details">
 <span id="author" class="author">Andres Almiray</span><br>
-<span id="revnumber">version 1.1.0</span>
+<span id="revnumber">version 1.2.0</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -214,7 +214,13 @@ shows</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">connect_on_startup</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Establishes a connection to the datasource at the end of the <code>Bootstrap</code> phase.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Establishes a connection to the datasource at the beginning of the <code>Startup</code> phase.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jmx</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Expose the connection pool using JMX.</p></td>
 </tr>
 </tbody>
 </table>
@@ -369,7 +375,7 @@ create a class that implements the <code><a href="api/griffon/plugins/hibernate4
 <div class="sect2">
 <h3 id="_example"><a class="anchor" href="#_example"></a>2.2. Example</h3>
 <div class="paragraph">
-<p>The following is a trivial usage of the <code><a href="api/griffon/plugins/hibernate4/Hibernate4Handler.html" target="_blank">Hibernate4Handler</a></code> inside a service</p>
+<p>The following is a trivial usage of the <code><a href="api/griffon/plugins/hibernate4/Hibernate4Handler.html" target="_blank">Hibernate4Handler</a></code> inside a Java service</p>
 </div>
 <div class="listingblock">
 <div class="title">com.acme.SampleService.java</div>
@@ -398,6 +404,35 @@ create a class that implements the <code><a href="api/griffon/plugins/hibernate4
                  Person person = (Person) session.createQuery(<span class="string"><span class="delimiter">&quot;</span><span class="content">from Person where id = </span><span class="delimiter">&quot;</span></span> + id).uniqueResult();
                  <span class="keyword">return</span> person != <span class="predefined-constant">null</span> ? person.getName() : <span class="predefined-constant">null</span>;
          });
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s the Groovy version of it</p>
+</div>
+<div class="listingblock">
+<div class="title">com.acme.SampleService.groovy</div>
+<div class="content">
+<pre class="CodeRay highlight nowrap"><code data-lang="groovy"><span class="keyword">package</span> com.acme
+
+<span class="keyword">import</span> <span class="include">griffon.core.artifact.GriffonService</span>
+<span class="keyword">import</span> <span class="include">griffon.metadata.ArtifactProviderFor</span>
+
+<span class="keyword">import</span> <span class="include">griffon.plugins.hibernate4.Hibernate4Handler</span>
+<span class="keyword">import</span> <span class="include">org.hibernate.Session</span>
+
+<span class="keyword">import</span> <span class="include">javax.inject.Inject</span>
+
+<span class="annotation">@ArtifactProviderFor</span>(GriffonService)
+<span class="type">class</span> <span class="class">SampleService</span> {
+    <span class="annotation">@Inject</span>
+    <span class="directive">private</span> Hibernate4Handler hibernate4Handler
+
+    <span class="predefined-type">String</span> getPersonName(<span class="type">int</span> id) {
+         hibernate4Handler.withHbm4Session { <span class="predefined-type">String</span> sessionFactoryName, Session session -&gt;
+             session.createQuery(<span class="string"><span class="delimiter">'</span><span class="content">from Person where id = </span><span class="delimiter">'</span></span> + id).uniqueResult()?.name
+         }
     }
 }</code></pre>
 </div>
@@ -463,14 +498,36 @@ DataSource events may be triggered during connection and disconnection from a <c
 <h3 id="_ast_transformation"><a class="anchor" href="#_ast_transformation"></a>2.4. AST Transformation</h3>
 <div class="paragraph">
 <p>You can apply the <code><a href="api/griffon/transform/Hibernate4Aware.html" target="_blank">@Hibernate4Aware</a></code> AST transformation on any class. This injects the behavior of <code><a href="api/griffon/plugins/hibernate4/Hibernate4Handler.html" target="_blank">Hibernate4Handler</a></code>
-into said class.</p>
+into said class. The previous Groovy service example can be rewritten as follows</p>
+</div>
+<div class="listingblock">
+<div class="title">com.acme.SampleService.groovy</div>
+<div class="content">
+<pre class="CodeRay highlight nowrap"><code data-lang="groovy"><span class="keyword">package</span> com.acme
+
+<span class="keyword">import</span> <span class="include">griffon.core.artifact.GriffonService</span>
+<span class="keyword">import</span> <span class="include">griffon.metadata.ArtifactProviderFor</span>
+<span class="keyword">import</span> <span class="include">griffon.transform.Hibernate4Aware</span>
+
+<span class="keyword">import</span> <span class="include">org.hibernate.Session</span>
+
+<span class="annotation">@Hibernate4Aware</span>
+<span class="annotation">@ArtifactProviderFor</span>(GriffonService)
+<span class="type">class</span> <span class="class">SampleService</span> {
+    <span class="predefined-type">String</span> getPersonName(<span class="type">int</span> id) {
+         withHbm4Session { <span class="predefined-type">String</span> sessionFactoryName, Session session -&gt;
+             session.createQuery(<span class="string"><span class="delimiter">'</span><span class="content">from Person where id = </span><span class="delimiter">'</span></span> + id).uniqueResult()?.name
+         }
+    }
+}</code></pre>
+</div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_dsl_descriptors"><a class="anchor" href="#_dsl_descriptors"></a>2.5. DSL Descriptors</h3>
 <div class="paragraph">
 <p>This plugin provides DSL descriptors for Intellij IDEA and Eclipse (provided you have the Groovy Eclipse plugin installed).
-These descriptors are found inside the <code>griffon-hibernate4-groovy-compile-1.1.0.jar</code>, with locations</p>
+These descriptors are found inside the <code>griffon-hibernate4-groovy-compile-1.2.0.jar</code>, with locations</p>
 </div>
 <div class="ulist">
 <ul>
@@ -502,7 +559,7 @@ may include the following snippet in <code>build.gradle</code></p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight nowrap"><code data-lang="groovy">dependencies {
-    griffon 'org.codehaus.griffon.plugins:griffon-hibernate4-plugin:1.1.0'
+    griffon 'org.codehaus.griffon.plugins:griffon-hibernate4-plugin:1.2.0'
 }</code></pre>
 </div>
 </div>
@@ -518,7 +575,7 @@ may include the following snippet in <code>build.gradle</code></p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight nowrap"><code data-lang="groovy">dependencies {
-    compile 'org.codehaus.griffon.plugins:griffon-hibernate4-core:1.1.0'
+    compile 'org.codehaus.griffon.plugins:griffon-hibernate4-core:1.2.0'
 }</code></pre>
 </div>
 </div>
@@ -526,7 +583,7 @@ may include the following snippet in <code>build.gradle</code></p>
 <div class="title">Compile Only</div>
 <div class="content">
 <pre class="CodeRay highlight nowrap"><code data-lang="groovy">dependencies {
-    compileOnly 'org.codehaus.griffon.plugins:griffon-hibernate4-groovy-compile:1.1.0'
+    compileOnly 'org.codehaus.griffon.plugins:griffon-hibernate4-groovy-compile:1.2.0'
 }</code></pre>
 </div>
 </div>
@@ -545,7 +602,7 @@ snippet before the <code>&lt;build&gt;</code> element</p>
         <span class="tag">&lt;dependency&gt;</span>
             <span class="tag">&lt;groupId&gt;</span>org.codehaus.griffon.plugins<span class="tag">&lt;/groupId&gt;</span>
             <span class="tag">&lt;artifactId&gt;</span>griffon-hibernate4-plugin<span class="tag">&lt;/artifactId&gt;</span>
-            <span class="tag">&lt;version&gt;</span>1.1.0<span class="tag">&lt;/version&gt;</span>
+            <span class="tag">&lt;version&gt;</span>1.2.0<span class="tag">&lt;/version&gt;</span>
             <span class="tag">&lt;type&gt;</span>pom<span class="tag">&lt;/type&gt;</span>
             <span class="tag">&lt;scope&gt;</span>import<span class="tag">&lt;/scope&gt;</span>
         <span class="tag">&lt;/dependency&gt;</span>
@@ -607,6 +664,9 @@ binding if the wrong type has been applied by the Griffon runtime.</p>
 <div class="paragraph">
 <p>Module name: <code>hibernate4</code></p>
 </div>
+<div class="paragraph">
+<p>Depends on: <code>datasource</code></p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight nowrap"><code data-lang="java">bind(<span class="predefined-type">ResourceBundle</span>.class)
@@ -653,8 +713,8 @@ bind(GriffonAddon.class)
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.1.0<br>
-Last updated 2014-12-08 15:53:52 CST
+Version 1.2.0<br>
+Last updated 2014-12-19 18:10:21 CET
 </div>
 </div>
 </body>
