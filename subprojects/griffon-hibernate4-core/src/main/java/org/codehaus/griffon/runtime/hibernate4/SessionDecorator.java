@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2015 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,27 @@
  */
 package org.codehaus.griffon.runtime.hibernate4;
 
-import org.hibernate.*;
+import org.hibernate.CacheMode;
+import org.hibernate.Criteria;
+import org.hibernate.Filter;
+import org.hibernate.FlushMode;
+import org.hibernate.HibernateException;
+import org.hibernate.IdentifierLoadAccess;
+import org.hibernate.LobHelper;
+import org.hibernate.LockMode;
+import org.hibernate.LockOptions;
+import org.hibernate.NaturalIdLoadAccess;
+import org.hibernate.Query;
+import org.hibernate.ReplicationMode;
+import org.hibernate.SQLQuery;
+import org.hibernate.Session;
+import org.hibernate.SessionEventListener;
+import org.hibernate.SessionFactory;
+import org.hibernate.SharedSessionBuilder;
+import org.hibernate.SimpleNaturalIdLoadAccess;
+import org.hibernate.Transaction;
+import org.hibernate.TypeHelper;
+import org.hibernate.UnknownProfileException;
 import org.hibernate.jdbc.ReturningWork;
 import org.hibernate.jdbc.Work;
 import org.hibernate.procedure.ProcedureCall;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2015 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
  */
 package org.codehaus.griffon.runtime.hibernate4.internal;
 
-import org.codehaus.griffon.runtime.hibernate4.internal.exceptions.DatabaseException;
 import griffon.util.GriffonNameUtils;
+import org.codehaus.griffon.runtime.hibernate4.internal.exceptions.DatabaseException;
 import org.hibernate.dialect.Dialect;
 import org.hibernate.engine.jdbc.dialect.internal.StandardDialectResolver;
 import org.hibernate.engine.jdbc.dialect.spi.DatabaseMetaDataDialectResolutionInfoAdapter;
