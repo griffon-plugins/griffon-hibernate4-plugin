@@ -1,17 +1,15 @@
 apply plugin: 'jdepend'
-// apply plugin: 'checkstyle'
+apply plugin: 'checkstyle'
 apply plugin: 'com.github.hierynomus.license'
 
 def configDir = new File(buildscript.sourceFile.parentFile.parentFile, 'config')
 ext.checkstyleConfigDir = "$configDir/checkstyle"
 
-/*
 checkstyle {
     toolVersion = '6.0'
     configFile = new File(checkstyleConfigDir, 'checkstyle.xml')
     configProperties.checkstyleConfigDir = checkstyleConfigDir
 }
-*/
 
 if (project.hasProperty('findBugsEnabled') && project.findBugsEnabled.toBoolean()) {
     apply plugin: 'findbugs'
@@ -53,6 +51,8 @@ license {
     mapping {
         java   = 'SLASHSTAR_STYLE'
         groovy = 'SLASHSTAR_STYLE'
+        dsld   = 'SLASHSTAR_STYLE'
+        gdsl   = 'SLASHSTAR_STYLE'
     }
     ext.year = '2014-2017'
     exclude '**/*.png'
