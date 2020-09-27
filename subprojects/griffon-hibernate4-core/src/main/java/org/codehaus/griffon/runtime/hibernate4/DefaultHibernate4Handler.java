@@ -1,11 +1,13 @@
 /*
- * Copyright 2014-2017 the original author or authors.
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright 2014-2020 The author and/or original authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,6 +17,8 @@
  */
 package org.codehaus.griffon.runtime.hibernate4;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.plugins.hibernate4.Hibernate4Callback;
 import griffon.plugins.hibernate4.Hibernate4Factory;
 import griffon.plugins.hibernate4.Hibernate4Handler;
@@ -25,8 +29,6 @@ import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;

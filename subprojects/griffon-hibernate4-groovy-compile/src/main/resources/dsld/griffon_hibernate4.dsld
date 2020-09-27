@@ -24,7 +24,7 @@ import org.codehaus.groovy.ast.expr.MethodCallExpression
 
 supportsVersion(groovyEclipse: '2.5.1')
 
-contribute(enclosingClass(annotatedBy('griffon.transform.Hibernate4Aware'))) {
+contribute(enclosingClass(annotatedBy('griffon.transform.hibernate4.Hibernate4Aware'))) {
     provider = 'griffon-hibernate4'
     delegatesTo 'griffon.plugins.hibernate4.Hibernate4Handler'
 }

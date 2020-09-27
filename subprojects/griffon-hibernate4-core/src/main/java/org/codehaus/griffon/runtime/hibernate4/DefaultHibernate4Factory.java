@@ -1,11 +1,13 @@
 /*
- * Copyright 2014-2017 the original author or authors.
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright 2014-2020 The author and/or original authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,6 +17,7 @@
  */
 package org.codehaus.griffon.runtime.hibernate4;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.GriffonApplication;
 import griffon.core.env.Metadata;
 import griffon.core.injection.Injector;
@@ -22,16 +25,20 @@ import griffon.plugins.datasource.DataSourceFactory;
 import griffon.plugins.datasource.DataSourceStorage;
 import griffon.plugins.hibernate4.Hibernate4Bootstrap;
 import griffon.plugins.hibernate4.Hibernate4Factory;
+import griffon.plugins.hibernate4.events.Hibernate4ConfigurationAvailableEvent;
+import griffon.plugins.hibernate4.events.Hibernate4ConnectEndEvent;
+import griffon.plugins.hibernate4.events.Hibernate4ConnectStartEvent;
+import griffon.plugins.hibernate4.events.Hibernate4DisconnectEndEvent;
+import griffon.plugins.hibernate4.events.Hibernate4DisconnectStartEvent;
 import griffon.plugins.monitor.MBeanManager;
 import griffon.util.CollectionUtils;
 import org.codehaus.griffon.runtime.core.storage.AbstractObjectFactory;
 import org.codehaus.griffon.runtime.hibernate4.internal.HibernateConfigurationHelper;
-import org.codehaus.griffon.runtime.jmx.SessionFactoryMonitor;
+import org.codehaus.griffon.runtime.hibernate4.monitor.SessionFactoryMonitor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.sql.DataSource;
@@ -42,7 +49,6 @@ import java.util.Set;
 import static griffon.util.ConfigUtils.getConfigValue;
 import static griffon.util.ConfigUtils.getConfigValueAsBoolean;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
-import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -60,7 +66,7 @@ public class DefaultHibernate4Factory extends AbstractObjectFactory<SessionFacto
 
     @Inject
     private Injector injector;
-    
+
     @Inject
     private MBeanManager mBeanManager;
 
@@ -73,7 +79,7 @@ public class DefaultHibernate4Factory extends AbstractObjectFactory<SessionFacto
         sessionFactoryNames.add(KEY_DEFAULT);
 
         if (configuration.containsKey(getPluralKey())) {
-            Map<String, Object> sessionFactories = (Map<String, Object>) configuration.get(getPluralKey());
+            Map<String, Object> sessionFactories = configuration.get(getPluralKey());
             sessionFactoryNames.addAll(sessionFactories.keySet());
         }
     }
@@ -107,7 +113,7 @@ public class DefaultHibernate4Factory extends AbstractObjectFactory<SessionFacto
     @Override
     public SessionFactory create(@Nonnull String name) {
         Map<String, Object> config = narrowConfig(name);
-        event("Hibernate4ConnectStart", asList(name, config));
+        event(Hibernate4ConnectStartEvent.of(name, config));
 
         Configuration configuration = createConfiguration(config, name);
         createSchema(name, config, configuration);
@@ -131,7 +137,7 @@ public class DefaultHibernate4Factory extends AbstractObjectFactory<SessionFacto
             }
         }
 
-        event("Hibernate4ConnectEnd", asList(name, config, sessionFactory));
+        event(Hibernate4ConnectEndEvent.of(name, config, sessionFactory));
         return sessionFactory;
     }
 
@@ -139,7 +145,7 @@ public class DefaultHibernate4Factory extends AbstractObjectFactory<SessionFacto
     public void destroy(@Nonnull String name, @Nonnull SessionFactory instance) {
         requireNonNull(instance, "Argument 'instance' must not be null");
         Map<String, Object> config = narrowConfig(name);
-        event("Hibernate4DisconnectStart", asList(name, config, instance));
+        event(Hibernate4DisconnectStartEvent.of(name, config, instance));
 
         Session session = null;
         try {
@@ -156,10 +162,10 @@ public class DefaultHibernate4Factory extends AbstractObjectFactory<SessionFacto
         closeDataSource(name);
 
         if (getConfigValueAsBoolean(config, "jmx", true)) {
-            ((JMXAwareSessionFactory) instance).disposeMBeans();
+            unregisterMBeans((JMXAwareSessionFactory) instance);
         }
 
-        event("Hibernate4DisconnectEnd", asList(name, config));
+        event(Hibernate4DisconnectEndEvent.of(name, config));
     }
 
     private void registerMBeans(@Nonnull String name, @Nonnull JMXAwareSessionFactory sessionFactory) {
@@ -168,17 +174,23 @@ public class DefaultHibernate4Factory extends AbstractObjectFactory<SessionFacto
         sessionFactory.addObjectName(mBeanManager.registerMBean(sessionFactoryMonitor, false).getCanonicalName());
     }
 
+    private void unregisterMBeans(@Nonnull JMXAwareSessionFactory sessionFactory) {
+        for (String objectName : sessionFactory.getObjectNames()) {
+            mBeanManager.unregisterMBean(objectName);
+        }
+        sessionFactory.clearObjectNames();
+    }
+
     @Nonnull
     @SuppressWarnings("ConstantConditions")
     protected Configuration createConfiguration(@Nonnull Map<String, Object> config, @Nonnull String dataSourceName) {
         DataSource dataSource = getDataSource(dataSourceName);
         HibernateConfigurationHelper configHelper = new HibernateConfigurationHelper(getApplication(), config, dataSourceName, dataSource);
         Configuration configuration = configHelper.buildConfiguration();
-        getApplication().getEventRouter().publishEvent("Hibernate4ConfigurationAvailable",
-            asList(CollectionUtils.map()
-                .e("configuration", configuration)
-                .e("dataSourceName", dataSourceName)
-                .e("sessionConfiguration", config)));
+        getApplication().getEventRouter().publishEvent(Hibernate4ConfigurationAvailableEvent.of(CollectionUtils.<String, Object>map()
+            .e("configuration", configuration)
+            .e("dataSourceName", dataSourceName)
+            .e("sessionConfiguration", config)));
         return configuration;
     }
 

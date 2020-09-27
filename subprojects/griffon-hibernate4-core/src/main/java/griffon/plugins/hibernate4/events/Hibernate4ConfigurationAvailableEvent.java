@@ -15,23 +15,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.griffon.runtime.hibernate4;
+package griffon.plugins.hibernate4.events;
 
 import griffon.annotations.core.Nonnull;
-import org.codehaus.griffon.runtime.core.configuration.ResourceBundleConfiguration;
+import griffon.core.event.Event;
 
-import javax.application.converter.ConverterRegistry;
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.util.ResourceBundle;
+import java.util.Map;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
+ * @since 3.0.0
  */
-public class DefaultHibernate4Configuration extends ResourceBundleConfiguration {
-    @Inject
-    public DefaultHibernate4Configuration(@Nonnull ConverterRegistry converterRegistry,
-                                          @Nonnull @Named("hibernate4") ResourceBundle resourceBundle) {
-        super(converterRegistry, resourceBundle);
+public class Hibernate4ConfigurationAvailableEvent extends Event {
+    private final Map<String, Object> config;
+
+    public Hibernate4ConfigurationAvailableEvent(@Nonnull Map<String, Object> config) {
+        this.config = requireNonNull(config, "Argument 'config' must not be null");
+    }
+
+    @Nonnull
+    public Map<String, Object> getConfig() {
+        return config;
+    }
+
+    @Nonnull
+    public static Hibernate4ConfigurationAvailableEvent of(@Nonnull Map<String, Object> config) {
+        return new Hibernate4ConfigurationAvailableEvent(config);
     }
 }

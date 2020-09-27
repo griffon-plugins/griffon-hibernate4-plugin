@@ -15,9 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-config {
-    info {
-        inceptionYear = '2014'
-        tags          = ['griffon', 'plugin', 'datasource', 'hibernate4']
-    }
+package griffon.transform.hibernate4;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * <p>Annotates a class.</p>
+ *
+ * @author Andres Almiray
+ * @see griffon.plugins.hibernate4.Hibernate4Handler
+ */
+@Documented
+@Retention(RetentionPolicy.SOURCE)
+@Target({ElementType.TYPE})
+public @interface Hibernate4Aware {
 }

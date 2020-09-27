@@ -15,33 +15,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.plugins.hibernate4.exceptions;
+package griffon.plugins.hibernate4.events;
 
 import griffon.annotations.core.Nonnull;
-import griffon.exceptions.GriffonException;
+import griffon.core.event.Event;
+
+import java.util.Map;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
+ * @since 3.0.0
  */
-public class RuntimeHibernate4Exception extends GriffonException {
-    private final String sessionFactoryName;
+public class Hibernate4DisconnectEndEvent extends Event {
+    private final String name;
+    private final Map<String, Object> config;
 
-    public RuntimeHibernate4Exception(@Nonnull String sessionFactoryName, @Nonnull Exception sqle) {
-        super(format(sessionFactoryName), requireNonNull(sqle, "sqle"));
-        this.sessionFactoryName = sessionFactoryName;
+    public Hibernate4DisconnectEndEvent(@Nonnull String name, @Nonnull Map<String, Object> config) {
+        this.name = requireNonBlank(name, "Argument 'name' must not be blank");
+        this.config = requireNonNull(config, "Argument 'config' must not be null");
     }
 
     @Nonnull
-    private static String format(@Nonnull String sessionFactoryName) {
-        requireNonBlank(sessionFactoryName, "sessionFactoryName");
-        return "An error occurred when executing a statement on hibernate '" + sessionFactoryName + "'";
+    public String getName() {
+        return name;
     }
 
     @Nonnull
-    public String getHibernate4Name() {
-        return sessionFactoryName;
+    public Map<String, Object> getConfig() {
+        return config;
+    }
+
+    @Nonnull
+    public static Hibernate4DisconnectEndEvent of(@Nonnull String name, @Nonnull Map<String, Object> config) {
+        return new Hibernate4DisconnectEndEvent(name, config);
     }
 }

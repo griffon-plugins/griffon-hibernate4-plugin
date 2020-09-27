@@ -1,11 +1,13 @@
 /*
- * Copyright 2014-2017 the original author or authors.
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright 2014-2020 The author and/or original authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -30,7 +32,7 @@ class Hibernate4AwareASTTransformationSpec extends Specification {
 
         when:
         def bean = shell.evaluate('''
-        @griffon.transform.Hibernate4Aware
+        @griffon.transform.hibernate4.Hibernate4Aware
         class Bean { }
         new Bean()
         ''')
@@ -40,9 +42,9 @@ class Hibernate4AwareASTTransformationSpec extends Specification {
         Hibernate4Handler.methods.every { Method target ->
             bean.class.declaredMethods.find { Method candidate ->
                 candidate.name == target.name &&
-                candidate.returnType == target.returnType &&
-                candidate.parameterTypes == target.parameterTypes &&
-                candidate.exceptionTypes == target.exceptionTypes
+                    candidate.returnType == target.returnType &&
+                    candidate.parameterTypes == target.parameterTypes &&
+                    candidate.exceptionTypes == target.exceptionTypes
             }
         }
     }
@@ -57,15 +59,16 @@ class Hibernate4AwareASTTransformationSpec extends Specification {
         import griffon.plugins.hibernate4.exceptions.RuntimeHibernate4Exception
         import griffon.plugins.hibernate4.Hibernate4Handler
 
-        import javax.annotation.Nonnull
-        @griffon.transform.Hibernate4Aware
+        import griffon.annotations.core.Nonnull
+
+        @griffon.transform.hibernate4.Hibernate4Aware
         class Hibernate4HandlerBean implements Hibernate4Handler {
             @Override
-            public <R> R withHbm4Session(@Nonnull Hibernate4Callback<R> callback) throws RuntimeHibernate4Exception {
+             <R> R withHbm4Session(@Nonnull Hibernate4Callback<R> callback) throws RuntimeHibernate4Exception {
                 return null
             }
             @Override
-            public <R> R withHbm4Session(@Nonnull String sessionFactoryName, @Nonnull Hibernate4Callback<R> callback) throws RuntimeHibernate4Exception {
+             <R> R withHbm4Session(@Nonnull String sessionFactoryName, @Nonnull Hibernate4Callback<R> callback) throws RuntimeHibernate4Exception {
                 return null
             }
             @Override

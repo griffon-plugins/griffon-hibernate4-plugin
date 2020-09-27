@@ -22,7 +22,7 @@ environment may connect to a different database.
 [source,groovy,options="nowrap"]
 .src/main/resources/Hibernate4.groovy
 ----
-include::{path_griffon_hibernate4_core}/src/test/resources/Hibernate4.groovy[lines=16..33]
+include::{path_griffon_hibernate4_core}/src/test/resources/Hibernate4.groovy[lines=18..35]
 ----
 
 You may configure multiple named SessionFactories (the default factory is aptly named `default`) as the following snippet
@@ -31,7 +31,7 @@ shows
 [source,groovy,options="nowrap"]
 .src/main/resources/Hibernate4.groovy
 ----
-include::{path_griffon_hibernate4_core}/src/test/resources/Hibernate4.groovy[lines=35..-1]
+include::{path_griffon_hibernate4_core}/src/test/resources/Hibernate4.groovy[lines=37..-1]
 ----
 
 === Session Properties
@@ -116,7 +116,7 @@ with JDK8+ or closures if running Groovy.
 [source,java,options="nowrap"]
 .griffon.plugins.hibernate4.Hibernate4Callback.java
 ----
-include::{path_griffon_hibernate4_core}/src/main/java/griffon/plugins/hibernate4/Hibernate4Callback.java[lines=25..-1]
+include::{path_griffon_hibernate4_core}/src/main/java/griffon/plugins/hibernate4/Hibernate4Callback.java[lines=26..-1]
 ----
 
 === Mappings
@@ -127,7 +127,7 @@ that should be added to a `{link_session_factory}` as long as they are annotated
 [source,groovy,options="nowrap"]
 .src/main/groovy/com/acme/Person.groovy
 ----
-include::{path_griffon_hibernate4_core}/src/test/groovy/griffon/plugins/hibernate4/Person.groovy[lines=16..-1]
+include::{path_griffon_hibernate4_core}/src/test/groovy/griffon/plugins/hibernate4/Person.groovy[lines=18..-1]
 ----
 
 Don't forget mappings require a matching XML file that contains query definitions, such as
@@ -136,7 +136,7 @@ Don't forget mappings require a matching XML file that contains query definition
 [subs="verbatim,attributes"]
 .src/main/resources/griffon/plugins/hibernate4/Person.hbm.xml
 ----
-include::{path_griffon_hibernate4_core}/src/test/resources/griffon/plugins/hibernate4/Person.hbm.xml[lines=18..-1]
+include::{path_griffon_hibernate4_core}/src/test/resources/griffon/plugins/hibernate4/Person.hbm.xml[lines=20..-1]
 ----
 
 === Bootstrap
@@ -200,17 +200,17 @@ The following is a trivial usage of the `{api_hibernate4_handler}` inside a Java
 package com.acme;
 
 import griffon.core.artifact.GriffonService;
-import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
 
 import griffon.plugins.hibernate4.Hibernate4Handler;
 import griffon.plugins.hibernate4.Hibernate4Callback;
 import org.hibernate.Session;
+import org.kordamp.jipsy.ServiceProviderFor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
-@ArtifactProviderFor(GriffonService.class)
+@ServiceProviderFor(GriffonService.class)
 public class SampleService extends AbstractGriffonService {
     @Inject
     private Hibernate4Handler hibernate4Handler;
@@ -233,14 +233,14 @@ Here's the Groovy version of it
 package com.acme
 
 import griffon.core.artifact.GriffonService
-import griffon.metadata.ArtifactProviderFor
 
 import griffon.plugins.hibernate4.Hibernate4Handler
 import org.hibernate.Session
+import org.kordamp.jipsy.ServiceProviderFor
 
 import javax.inject.Inject
 
-@ArtifactProviderFor(GriffonService)
+@ServiceProviderFor(GriffonService)
 class SampleService {
     @Inject
     private Hibernate4Handler hibernate4Handler
@@ -257,15 +257,15 @@ class SampleService {
 
 The following events will be triggered by `{api_hibernate4_handler}`
 
-Hibernate4ConnectStart(String sessionFactoryName, Map<String, Object> config):: Triggered before connecting to the datasource.
-Hibernate4ConfigurationAvailable(Map<String, Object> options):: Triggered after the session's configuration is ready. The map
+Hibernate4ConnectStartEvent(String sessionFactoryName, Map<String, Object> config):: Triggered before connecting to the datasource.
+Hibernate4ConfigurationAvailableEvent(Map<String, Object> options):: Triggered after the session's configuration is ready. The map
 contains the following keys:
   * configuration; type=org.hibernate.cfg.Configuration
   * dataSourceName; type=java.lang.String
   * sessionConfiguration; type=java.util.Map
-Hibernate4ConnectEnd(String sessionFactoryName, Map<String, Object> config, SessionFactory factory):: Triggered after connecting to the datasource.
-Hibernate4DisconnectStart(String sessionFactoryName, Map<String, Object> config, SessionFactory factory):: Triggered before disconnecting from the datasource.
-Hibernate4DisconnectEnd(String sessionFactoryName, Map<String, Object> config):: Triggered after disconnecting from the datasource.
+Hibernate4ConnectEndEvent(String sessionFactoryName, Map<String, Object> config, SessionFactory factory):: Triggered after connecting to the datasource.
+Hibernate4DisconnectStartEvent(String sessionFactoryName, Map<String, Object> config, SessionFactory factory):: Triggered before disconnecting from the datasource.
+Hibernate4DisconnectEndEvent(String sessionFactoryName, Map<String, Object> config):: Triggered after disconnecting from the datasource.
 
 NOTE: DataSource events may be triggered during connection and disconnection from a `{link_session_factory}`.
 
@@ -280,13 +280,13 @@ into said class. The previous Groovy service example can be rewritten as follows
 package com.acme
 
 import griffon.core.artifact.GriffonService
-import griffon.metadata.ArtifactProviderFor
-import griffon.transform.Hibernate4Aware
+import griffon.transform.hibernate4.Hibernate4Aware
 
 import org.hibernate.Session
+import org.kordamp.jipsy.ServiceProviderFor
 
 @Hibernate4Aware
-@ArtifactProviderFor(GriffonService)
+@ServiceProviderFor(GriffonService)
 class SampleService {
     String getPersonName(int id) {
          withHbm4Session { String sessionFactoryName, Session session ->

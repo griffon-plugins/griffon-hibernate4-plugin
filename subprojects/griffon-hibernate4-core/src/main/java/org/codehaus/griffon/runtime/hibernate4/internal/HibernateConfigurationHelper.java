@@ -1,11 +1,13 @@
 /*
- * Copyright 2014-2017 the original author or authors.
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright 2014-2020 The author and/or original authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,12 +19,12 @@ package org.codehaus.griffon.runtime.hibernate4.internal;
 
 import griffon.core.GriffonApplication;
 import griffon.plugins.hibernate4.Hibernate4Mapping;
-import griffon.util.ServiceLoaderUtils;
 import org.hibernate.HibernateException;
 import org.hibernate.Interceptor;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.cfg.NamingStrategy;
+import org.kordamp.jipsy.util.TypeLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,10 +45,10 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @author Andres Almiray
  */
 public class HibernateConfigurationHelper {
-    private static final Logger LOG = LoggerFactory.getLogger(HibernateConfigurationHelper.class);
     public static final String ENTITY_INTERCEPTOR = "entityInterceptor";
     public static final String NAMING_STRATEGY = "namingStrategy";
     public static final String PROPS = "props";
+    private static final Logger LOG = LoggerFactory.getLogger(HibernateConfigurationHelper.class);
     private static final String HBM_XML_SUFFIX = ".hbm.xml";
 
     private final Map<String, Object> sessionConfig;
@@ -131,19 +133,19 @@ public class HibernateConfigurationHelper {
     }
 
     private void applyMappings(final Configuration config) {
-        ServiceLoaderUtils.load(application.getApplicationClassLoader().get(), "META-INF/types", Hibernate4Mapping.class, new ServiceLoaderUtils.LineProcessor() {
+        TypeLoader.load(application.getApplicationClassLoader().get(), "META-INF/types", Hibernate4Mapping.class, new TypeLoader.LineProcessor() {
             @Override
             public void process(ClassLoader classLoader, Class<?> type, String line) {
                 line = line.trim();
                 if (isBlank(line)) return;
-                line = line.replace('.','/');
+                line = line.replace('.', '/');
                 LOG.debug("Registering {} as hibernate resource", line + HBM_XML_SUFFIX);
                 config.addResource(line + HBM_XML_SUFFIX);
             }
         });
 
         for (String mapping : getConfigValue(sessionConfig, "mappings", Collections.<String>emptyList())) {
-            mapping = mapping.replace('.','/');
+            mapping = mapping.replace('.', '/');
             if (!mapping.endsWith(HBM_XML_SUFFIX)) {
                 mapping = mapping + HBM_XML_SUFFIX;
             }
