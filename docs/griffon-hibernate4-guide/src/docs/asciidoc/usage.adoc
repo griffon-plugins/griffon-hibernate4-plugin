@@ -177,7 +177,7 @@ package com.acme;
 import griffon.plugins.hibernate4.Hibernate4Bootstrap;
 import griffon.core.injection.Module;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
-import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 @ServiceProviderFor(Module.class)
 public class ApplicationModule extends AbstractModule {
@@ -205,7 +205,7 @@ import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
 import griffon.plugins.hibernate4.Hibernate4Handler;
 import griffon.plugins.hibernate4.Hibernate4Callback;
 import org.hibernate.Session;
-import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -236,7 +236,7 @@ import griffon.core.artifact.GriffonService
 
 import griffon.plugins.hibernate4.Hibernate4Handler
 import org.hibernate.Session
-import org.kordamp.jipsy.ServiceProviderFor
+import org.kordamp.jipsy.annotations.ServiceProviderFor
 
 import javax.inject.Inject
 
@@ -283,7 +283,7 @@ import griffon.core.artifact.GriffonService
 import griffon.transform.hibernate4.Hibernate4Aware
 
 import org.hibernate.Session
-import org.kordamp.jipsy.ServiceProviderFor
+import org.kordamp.jipsy.annotations.ServiceProviderFor
 
 @Hibernate4Aware
 @ServiceProviderFor(GriffonService)
